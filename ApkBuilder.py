@@ -20,6 +20,8 @@ def generate_utm_specific_apk():
     MEDIUM = request.args.get('MEDIUM')
     TERM = request.args.get('TERM')
 
+    print(CAMPAIGN, SOURCE, MEDIUM, TERM)
+
     data = """
         package com.sports.unity.login.model;
 
@@ -35,8 +37,9 @@ def generate_utm_specific_apk():
     }
 
         """.format(CAMPAIGN, SOURCE, MEDIUM, TERM)
-    f = open('/home/sportsunity/SportsUnityAndroid/app/src/main/java/com/sports/unity/login/model/UtmConstants.java')
-    f.writelines(data)
+    f = open('/home/sportsunity/SportsUnityAndroid/app/src/main/java/com/sports/unity/login/model/UtmConstants.java',
+             'w')
+    f.write(data)
     f.close()
 
 
