@@ -1,8 +1,13 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, render_template
 from commands import getstatusoutput
 import os
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'the quick brown fox jumps over the lazy   dog'
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:port"}})
 
 
 def run_command():
@@ -71,20 +76,7 @@ def send_file():
 
 @app.route('/test')
 def html():
-    data = """
-    <!DOCTYPE html>
-<html>
-<head>
-<script>
-window.location="http://192.168.0.11:5000/utm_apk?campaign=aditya&source=unchi&medium=english&term=mid" 
-</script>
-</head>
-<body>
-<img src="https://www.tes.com/lessons/hI4HX9oibSNFSA/et-words">
-</body>
-</html>
-    """
-    return data
+    return render_template(template_name_or_list="init.html")
 
 
 if __name__ == '__main__':

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body onload="loadDoc()">
+
+<div>
+    <h1 id="demo">Init</h1>
+    <button type="button" onclick="loadDoc()">Change Content</button>
+</div>
+
+<script>
+    function loadDoc() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("demo").innerHTML = "Completed";
+            }
+        };
+        xhttp.open("GET", "http://192.168.0.11:5000/utm_apk?campaign=aditya&source=unchi&medium=english&term=mid", true);
+        xhttp.send();
+    }
+</script>
+
+</body>
+</html>
