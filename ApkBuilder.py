@@ -75,23 +75,12 @@ def html():
     <!DOCTYPE html>
 <html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-    $("button").click(function(){
-        $.ajax({url: "http://127.0.0.1:5000/utm_apk?campaign=aditya&source=unchi&medium=english&term=mid", success: function(result){
-            $("#div1").html(result);
-        }});
-    });
-});
+window.location="http://192.168.0.11:5000/utm_apk?campaign=aditya&source=unchi&medium=english&term=mid" 
 </script>
 </head>
 <body>
-
-<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
-
-<button>Get External Content</button>
-
+<img src="https://www.tes.com/lessons/hI4HX9oibSNFSA/et-words">
 </body>
 </html>
     """
