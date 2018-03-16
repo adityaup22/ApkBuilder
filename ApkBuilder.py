@@ -48,10 +48,13 @@ def generate_utm_specific_apk():
     out = run_command()
 
     if out[0] == 0:
-        for i in os.listdir('/Users/aditya/Downloads'):
-            if i.startswith('sportsunity') and i.endswith('.apk'):
-                return send_from_directory(directory='/Users/aditya/Downloads',
-                                           filename=str(i), as_attachment=True)
+        for i in os.listdir('/home/sportsunity/SportsUnityAndroid/app/build/outputs/apk/dev/debug'):
+            if i.endswith('.apk'):
+                print i
+                return send_from_directory(
+                    directory='/home/sportsunity/SportsUnityAndroid/app/build/outputs/apk/dev/debug',
+                    filename=str(i), as_attachment=True)
+        return 'No File Found'
     else:
         return out[1]
 
@@ -59,9 +62,9 @@ def generate_utm_specific_apk():
 @app.route('/download')
 def send_file():
     # os.chdir('/Users/aditya/Downloads')
-    for i in os.listdir('/Users/aditya/Downloads'):
-        if i.startswith('sportsunity') and i.endswith('.apk'):
-            return send_from_directory(directory='/Users/aditya/Downloads',
+    for i in os.listdir('/home/sportsunity/SportsUnityAndroid/app/build/outputs/apk/dev/debug'):
+        if i.endswith('.apk'):
+            return send_from_directory(directory='/home/sportsunity/SportsUnityAndroid/app/build/outputs/apk/dev/debug',
                                        filename=str(i), as_attachment=True)
     return 'No File'
 
