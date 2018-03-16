@@ -1,50 +1,69 @@
-from flask import Flask, request
-from commands import getoutput
+from flask import Flask, request, make_response, send_file, send_from_directory
+from commands import getstatusoutput
 import os
 
 app = Flask(__name__)
 
 
-@app.route('/')
 def run_command():
     os.chdir('/home/sportsunity/SportsUnityAndroid')
     cmd = 'sudo ./gradlew assembleDevDebug'
-    output = getoutput(cmd)
+    output = getstatusoutput(cmd)
     return output
 
 
-@app.route('/utm_apk')
-def generate_utm_specific_apk():
-    CAMPAIGN = request.args.get('CAMPAIGN')
-    SOURCE = request.args.get('SOURCE')
-    MEDIUM = request.args.get('MEDIUM')
-    TERM = request.args.get('TERM')
-
-    print(CAMPAIGN, SOURCE, MEDIUM, TERM)
-
+def write_utm_file(campaign, source, medium, term):
     data = """
-        package com.sports.unity.login.model;
+            package com.sports.unity.login.model;
 
-    /**
-     * Created by aditya on 15/03/18.
-     */
+        /**
+         * Created by aditya on 15/03/18.
+         */
 
-    public class UtmConstants {
-        public static final String CAMPAIGN = "{}";
-        public static final String SOURCE = "{}";
-        public static final String MEDIUM = "{}";
-        public static final String TERM = "{}";
-    }
+        public class UtmConstants {{
+            public static final String CAMPAIGN = "{0}";
+            public static final String SOURCE = "{1}";
+            public static final String MEDIUM = "{2}";
+            public static final String TERM = "{3}";
+        }}
 
-        """.format(CAMPAIGN, SOURCE, MEDIUM, TERM)
+            """.format(campaign, source, medium, term)
     f = open('/home/sportsunity/SportsUnityAndroid/app/src/main/java/com/sports/unity/login/model/UtmConstants.java',
              'w')
     f.write(data)
     f.close()
 
 
-def write_file():
-    pass
+@app.route('/utm_apk')
+def generate_utm_specific_apk():
+    # Getting Campaign Params From Url
+    campaign = request.args.get('campaign')
+    source = request.args.get('source')
+    medium = request.args.get('medium')
+    term = request.args.get('term')
+    # -- #
+
+    write_utm_file(campaign=campaign, source=source, medium=medium, term=term)
+
+    out = run_command()
+
+    if out[0] == 0:
+        for i in os.listdir('/Users/aditya/Downloads'):
+            if i.startswith('sportsunity') and i.endswith('.apk'):
+                return send_from_directory(directory='/Users/aditya/Downloads',
+                                           filename=str(i), as_attachment=True)
+    else:
+        return out[1]
+
+
+@app.route('/download')
+def send_file():
+    # os.chdir('/Users/aditya/Downloads')
+    for i in os.listdir('/Users/aditya/Downloads'):
+        if i.startswith('sportsunity') and i.endswith('.apk'):
+            return send_from_directory(directory='/Users/aditya/Downloads',
+                                       filename=str(i), as_attachment=True)
+    return 'No File'
 
 
 if __name__ == '__main__':
