@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, send_file, send_from_directory
+from flask import Flask, request, send_from_directory
 from commands import getstatusoutput
 import os
 
@@ -67,6 +67,35 @@ def send_file():
             return send_from_directory(directory='/home/sportsunity/SportsUnityAndroid/app/build/outputs/apk/dev/debug',
                                        filename=str(i), as_attachment=True)
     return 'No File'
+
+
+@app.route('/test')
+def html():
+    data = """
+    <!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $.ajax({url: "http://127.0.0.1:5000/utm_apk?campaign=aditya&source=unchi&medium=english&term=mid", success: function(result){
+            $("#div1").html(result);
+        }});
+    });
+});
+</script>
+</head>
+<body>
+
+<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+
+<button>Get External Content</button>
+
+</body>
+</html>
+    """
+    return data
 
 
 if __name__ == '__main__':
