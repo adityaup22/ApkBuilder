@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory, render_template
+from flask import Flask, request, send_from_directory, render_template, make_response
 from commands import getstatusoutput
 import os
 from flask_cors import CORS, cross_origin
@@ -76,7 +76,15 @@ def send_file():
 
 @app.route('/test')
 def html():
-    return render_template(template_name_or_list="init.html")
+    client_ip = str(request.remote_addr)
+    device = str(request.headers['User-Agent']).split('(')[1].split(')')[0]
+
+    print client_ip + device
+    # respone = make_response(render_template(template_name_or_list="init.html"))
+    # respone.headers['Set-Cookie'] = 'fileDownload=true; path=/'
+    # respone.set_cookie('fileDownload', True)
+    response = (client_ip + device).encode('base64', 'strict')
+    return response
 
 
 if __name__ == '__main__':
